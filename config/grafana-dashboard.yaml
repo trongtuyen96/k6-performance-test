@@ -1,0 +1,10 @@
+# Configures Grafana to load a K6 dashboard from the /var/lib/grafana/dashboards directory
+apiVersion: 1
+
+providers:
+  - name: "default"
+    org_id: 1
+    folder: ""
+    type: "file"
+    options:
+      path: /var/lib/grafana/dashboards

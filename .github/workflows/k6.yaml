@@ -1,0 +1,22 @@
+on: [push]
+
+jobs:
+  k6_local_test:
+    name: k6 Load Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Run k6 test locally
+        uses: k6io/action@v0.2.0
+        with:
+          filename: tests/threshold.js
+
+      # - name: Run k6 test on cloud
+      #   uses: k6io/action@v0.2.0
+      #   with:
+      #     filename: tests/threshold.js
+      #     cloud: true
+      #     token: ${{ secrets.K6_CLOUD_API_TOKEN }}
