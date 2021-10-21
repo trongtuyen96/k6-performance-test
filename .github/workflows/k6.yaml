@@ -1,8 +1,10 @@
+name: k6 local test run
+
 on: [push]
 
 jobs:
   k6_local_test:
-    name: k6 Load Test
+    name: k6 local test run
     runs-on: ubuntu-latest
 
     steps:

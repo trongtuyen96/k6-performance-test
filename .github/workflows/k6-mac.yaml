@@ -1,0 +1,21 @@
+name: k6 local test run on MacOS
+
+on:
+  push:
+    branches-ignore:
+      - "**" # this effectively disables this workflow - never runs
+
+jobs:
+  k6_local_test:
+    name: k6 local test on macos
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install k6 by homebrew
+        run: brew install k6
+
+      - name: Local k6 test
+        run: k6 run ./tests/threshold.js
