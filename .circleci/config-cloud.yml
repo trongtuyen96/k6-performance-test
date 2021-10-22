@@ -1,0 +1,26 @@
+default: &defaults
+  parallelism: 1
+  working_directory: ~/my-project
+
+# Remember to set K6_CLOUD_TOKEN and K6_CLOUD_PROJECT_ID in CircleCI Environment Variables
+k6_performance_tests: &k6_performance_tests
+  run:
+    name: Running k6 tests
+    command: |
+      docker pull loadimpact/k6:latest
+      docker run -i -e K6_CLOUD_TOKEN=$K6_CLOUD_TOKEN -e K6_CLOUD_PROJECT_ID=$K6_CLOUD_PROJECT_ID -v $HOME/my-project:/ci/ loadimpact/k6:latest cloud /ci/tests/cloud.js
+
+version: 2
+jobs:
+  run_performance_tests:
+    <<: *defaults
+    machine: true
+    steps:
+      - checkout
+      - *k6_performance_tests
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - run_performance_tests

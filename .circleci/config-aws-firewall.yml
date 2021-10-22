@@ -1,0 +1,46 @@
+# For more info: https://k6.io/blog/integrating-load-testing-with-circleci/
+
+default: &defaults
+  parallelism: 1
+  docker:
+    - image: ubuntu:latest
+
+setup: &setup
+  run:
+    name: Installing aws cli and setting it up
+    command: |
+      chmod 777 setup.sh
+      sh setup.sh
+authorize_circleci_through_firewall: &authorize_circleci_through_firewall
+  run:
+    name: Adding firewall rule to allow circleci through aws security group
+    command: |
+      chmod 777 permit.sh
+      sh permit.sh
+revoke_circleci_through_firewall: &revoke_circleci_through_firewall
+  run:
+    name: Remove firewall rule to deny circleci aws security group access
+    command: |
+      chmod 777 revoke.sh
+      sh revoke.sh
+k6_performance_tests: &k6_performance_tests
+  run:
+    name: Running Load Tests Using K6
+    command: |
+      k6 run tests/local.js
+version: 2
+jobs:
+  setup_authorize_test_revoke:
+    <<: *defaults
+    steps:
+      - checkout
+      - *setup
+      - *authorize_circleci_through_firewall
+      - *k6_performance_tests
+      - *revoke_circleci_through_firewall
+
+workflows:
+  version: 2
+  build-workflow:
+    jobs:
+      - setup_authorize_test_revoke
