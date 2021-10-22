@@ -17,7 +17,7 @@ k6_performance_tests: &k6_performance_tests
     - store_artifacts:
         path: /results/
 
-version: 2
+version: 2.1
 jobs:
   run_performance_tests:
     <<: *defaults
