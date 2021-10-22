@@ -9,10 +9,10 @@ k6_performance_tests: &k6_performance_tests
     # Mount a volume to access the folder and run the test
     command: |
       docker pull loadimpact/k6:latest
-      docker run -i -v $HOME/my-project:/ci:rw loadimpact/k6:latest run \
-      --out json=/ci/results/full.json \
-      --summary-export=/ci/results/summary.json \
-      /ci/tests/local.js
+      docker run -i -v $HOME/my-project:/ci loadimpact/k6:latest run \
+      --out json=$HOME/my-project/results/full.json \
+      --summary-export=$HOME/my-project/results/summary.json \
+      $HOME/my-project/tests/local.js
       
 version: 2
 jobs:
