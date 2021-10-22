@@ -1,0 +1,7 @@
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: k6-load-test@0
+    inputs:
+      filename: './tests/local.js'
