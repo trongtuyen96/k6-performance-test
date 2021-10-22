@@ -11,9 +11,9 @@ k6_performance_tests: &k6_performance_tests
     command: |
       docker pull loadimpact/k6:latest
       docker run -i -v $HOME/my-project:/ci loadimpact/k6:latest run \
-      --out json=$HOME/my-project/results/full.json \
-      --summary-export=$HOME/my-project/results/summary.json \
-      $HOME/my-project/tests/local.js
+      --out json=/ci/results/full.json \
+      --summary-export=/ci/results/summary.json \
+      /ci/tests/local.js
       
 version: 2
 jobs:
