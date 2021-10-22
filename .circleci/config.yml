@@ -3,21 +3,18 @@ default: &defaults
   working_directory: ~/my-project
 
 k6_performance_tests: &k6_performance_tests
-  steps:
-    - run:
-        name: Running k6 tests
-        # Download the k6 docker image. Alternatively, download the k6 release binary
-        # Mount a volume to access the folder and run the test
-        command: |
-          docker pull loadimpact/k6:latest
-          docker run -i -v $HOME/my-project:/ci/ loadimpact/k6:latest run \
-          --out json=/results/full.json \
-          --summary-export=/results/summary.json \
-          /ci/tests/local.js
-    - store_artifacts:
-        path: /results/
-
-version: 2.1
+  run:
+    name: Running k6 tests
+    # Download the k6 docker image. Alternatively, download the k6 release binary
+    # Mount a volume to access the folder and run the test
+    command: |
+      docker pull loadimpact/k6:latest
+      docker run -i -v $HOME/my-project:/ci/ loadimpact/k6:latest run \
+      --out json=/results/full.json \
+      --summary-export=/results/summary.json \
+      /ci/tests/local.js
+      
+version: 2
 jobs:
   run_performance_tests:
     <<: *defaults
@@ -26,6 +23,8 @@ jobs:
     steps:
       - checkout
       - *k6_performance_tests
+      - store_artifacts:
+          path: /results/
 
 workflows:
   version: 2
