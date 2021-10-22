@@ -1,6 +1,7 @@
 pool:
   vmImage: 'ubuntu-latest'
 
+# Require to install k6 in marketplace to make sure task available
 steps:
   - task: k6-load-test@0
     inputs:
