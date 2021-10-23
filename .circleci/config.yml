@@ -9,7 +9,7 @@ k6_performance_tests: &k6_performance_tests
     # Mount a volume to access the folder and run the test
     # Remember to select container path for output file (since if we select host path, CI not have permission to write file from host)
     command: |
-      mkdir -p /results
+      sudo mkdir -p /results
       docker pull loadimpact/k6:latest
       docker run -i -v $HOME/my-project/tests:/tests \
       -v $HOME/my-project/results:/results \
