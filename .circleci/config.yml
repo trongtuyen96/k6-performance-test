@@ -27,7 +27,7 @@ jobs:
           at: ~/
       - run:
           name: Running k6 Local Test
-          command: k6 run --out json=./results/full.json --summary-export=./results/summary.json /tests/local.js
+          command: k6 run --out json=./results/full.json --summary-export=./results/summary.json ./tests/local.js
       - store_artifacts:
           path: /results/
 
