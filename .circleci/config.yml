@@ -12,7 +12,9 @@ k6_performance_tests: &k6_performance_tests
       docker pull loadimpact/k6:latest
       docker run -i -v $HOME/my-project/tests:/ci/tests:z \
       -v $HOME/my-project/results:/ci/results:z \
-      loadimpact/k6:latest run \
+      loadimpact/k6:latest \
+      sudo chmod 777 /ci \
+      run \
       --out json=/ci/results/full.json \
       --summary-export=/ci/results/summary.json \
       /ci/tests/local.js
