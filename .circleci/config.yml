@@ -22,6 +22,8 @@ jobs:
     # Use `machine` executor because the Docker executor cannot mount volumes
     machine: true
     steps:
+      - attach_workspace:
+          at: ~/
       - checkout
       - *k6_performance_tests
       - store_artifacts:
