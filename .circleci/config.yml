@@ -9,15 +9,14 @@ k6_performance_tests: &k6_performance_tests
     # Mount a volume to access the folder and run the test
     # Remember to select container path for output file (since if we select host path, CI not have permission to write file from host)
     command: |
+      mkdir -p /results
       docker pull loadimpact/k6:latest
-      docker run -i -v $HOME/my-project/tests:/ci/tests:z \
-      -v $HOME/my-project/results:/ci/results:z \
-      loadimpact/k6:latest \
-      sudo chmod 777 /ci \
-      run \
-      --out json=/ci/results/full.json \
-      --summary-export=/ci/results/summary.json \
-      /ci/tests/local.js
+      docker run -i -v $HOME/my-project/tests:/tests \
+      -v $HOME/my-project/results:/results \
+      loadimpact/k6:latest run \
+      --out json=/results/full.json \
+      --summary-export=/results/summary.json \
+      /tests/local.js
       
 version: 2
 jobs:
