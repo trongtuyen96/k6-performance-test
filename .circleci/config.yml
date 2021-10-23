@@ -13,11 +13,11 @@ k6_performance_tests: &k6_performance_tests
       sudo chmod 777 /results
       docker pull loadimpact/k6:latest
       docker run -i -v $HOME/my-project/tests:/tests \
-      -v $HOME/my-project/results:/results \
-      loadimpact/k6:latest run \
-      --out json=/results/full.json \
-      --summary-export=/results/summary.json \
-      /tests/local.js
+        -v $HOME/my-project/results:/results \
+        loadimpact/k6:latest run \
+        --out json=./results/full.json \
+        --summary-export=./results/summary.json \
+        /tests/local.js
       
 version: 2
 jobs:
