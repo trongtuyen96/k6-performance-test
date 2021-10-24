@@ -19,11 +19,13 @@ k6_performance_tests: &k6_performance_tests
       #   /tests/local.js
 
       # mkdir -p /results
-      docker run --privileged \
+      docker run \
       -v $(pwd)/tests/local.js:/tests/local.js \
       -v /results:/results \
-      loadimpact/k6:latest \
-      run \
+      loadimpact/k6:latest
+      sudo chmod 777 /tests
+      sudo chmod 777 /results
+      k6 run \
       --out json=/results/full.json \
       --summary-export=/results/summary.json \
       /tests/local.js
