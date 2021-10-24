@@ -10,14 +10,13 @@ k6_performance_tests: &k6_performance_tests
     # Mount a volume to access the folder and run the test
     command: |
       docker pull loadimpact/k6:latest
-      su -c "setenforce 0"
-      docker run -i -v $HOME/my-project:/ci/:rw \
+      docker run -i -v $HOME/my-project:/ci/:Z \
         loadimpact/k6:latest run \
         --out json=/ci/results/full.json \
         --summary-export=/ci/results/summary.json \
         /ci/tests/local.js
 
-version: 2
+version: 2.1
 jobs:
   run_performance_tests:
     <<: *defaults
@@ -30,7 +29,7 @@ jobs:
           path: ci/results/
 
 workflows:
-  version: 2
+  version: 2.1
   build-and-test:
     jobs:
       - run_performance_tests
