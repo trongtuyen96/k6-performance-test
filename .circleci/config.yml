@@ -13,6 +13,8 @@ k6_performance_tests: &k6_performance_tests
       sudo mkdir -p ci/results
       cd ci/results
       sudo touch full.json summary.json
+      cd ..
+      cd ..
       sudo chown -R 777 ci/
       docker run -i -v $HOME/my-project/tests:/ci/tests \
         loadimpact/k6:latest run \
