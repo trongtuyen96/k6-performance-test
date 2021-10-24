@@ -1,6 +1,7 @@
+# TO-DO: Fix the issue of permission denied when accessing results/ files
 default: &defaults
   parallelism: 1
-  working_directory: ~/app
+  working_directory: ~/my-project
 
 k6_performance_tests: &k6_performance_tests
   run:
@@ -10,8 +11,10 @@ k6_performance_tests: &k6_performance_tests
     # Remember to select container path for output file (since if we select host path, CI not have permission to write file from host)
     command: |
       docker pull loadimpact/k6:latest
-      docker run -i -v $HOME/app:/ci/ \
+      docker run -i -v $HOME/my-project:/ci/ \
         loadimpact/k6:latest run \
+        --out json=/ci/results/full.json \
+        --summary-export=/ci/results/summary.json \
         /ci/tests/local.js
 
 version: 2
@@ -23,6 +26,8 @@ jobs:
     steps:
       - checkout
       - *k6_performance_tests
+      - store_artifacts:
+          path: ci/results/
 
 workflows:
   version: 2
