@@ -9,6 +9,7 @@ k6_performance_tests: &k6_performance_tests
     # Download the k6 docker image. Alternatively, download the k6 release binary
     # Mount a volume to access the folder and run the test
     command: |
+      su -c "setenforce 0"
       docker pull loadimpact/k6:latest
       docker run -i -v $HOME/my-project:/ci/:Z \
         loadimpact/k6:latest run \
