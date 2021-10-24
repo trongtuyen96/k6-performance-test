@@ -23,9 +23,10 @@ k6_performance_tests: &k6_performance_tests
       -v $(pwd)/tests/local.js:/tests/local.js \
       -v /results:/results \
       loadimpact/k6:latest
-      sudo chmod 777 /tests
-      sudo chmod 777 /results
-      k6 run \
+      sudo chmod 777 /tests/local.js
+      sudo chmod 777 /results/full.json
+      sudo chmod 777 /results/summary.json
+      k6 run 
       --out json=/results/full.json \
       --summary-export=/results/summary.json \
       /tests/local.js
