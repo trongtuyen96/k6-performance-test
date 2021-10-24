@@ -8,7 +8,6 @@ k6_performance_tests: &k6_performance_tests
     name: Running k6 tests
     # Download the k6 docker image. Alternatively, download the k6 release binary
     # Mount a volume to access the folder and run the test
-    # Remember to select container path for output file (since if we select host path, CI not have permission to write file from host)
     command: |
       docker pull loadimpact/k6:latest
       su -c "setenforce 0"
