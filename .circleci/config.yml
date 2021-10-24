@@ -10,7 +10,8 @@ k6_performance_tests: &k6_performance_tests
     # Mount a volume to access the folder and run the test
     command: |
       docker pull loadimpact/k6:latest
-      sudo chmod -R 777
+      sudo mkdir ci
+      sudo chmod -R 777 ci
       docker run -i -v $HOME/my-project:/ci/:Z \
         loadimpact/k6:latest run \
         --out json=/ci/results/full.json \
