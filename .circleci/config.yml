@@ -31,7 +31,7 @@ jobs:
             mkdir results
             cd results
             touch full.json summary.json
-            k6 run --out json=./results/full.json --summary-export=./results/summary.json tests/local.js
+            k6 run --out json=./results/full.json --summary-export=./results/summary.json /tests/local.js
       - store_test_results:
           path: /results/
 
