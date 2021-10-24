@@ -10,12 +10,11 @@ k6_performance_tests: &k6_performance_tests
     # Remember to select container path for output file (since if we select host path, CI not have permission to write file from host)
     command: |
       docker pull loadimpact/k6:latest
-      docker run -i -v $HOME/my-project/tests:/tests:Z \
-        -v $HOME/my-project/results:/results:Z \
+      docker run -i -v $HOME/my-project:/ci/ \
         loadimpact/k6:latest run \
-        --out json=/results/full.json \
-        --summary-export=/results/summary.json \
-        /tests/local.js
+        --out json=/ci/results/full.json \
+        --summary-export=/ci/results/summary.json \
+        /ci/tests/local.js
 
 version: 2
 jobs:
@@ -27,7 +26,7 @@ jobs:
       - checkout
       - *k6_performance_tests
       - store_artifacts:
-          path: /results/
+          path: ci/results/
 
 workflows:
   version: 2
