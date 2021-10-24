@@ -1,66 +1,46 @@
-version: 2.1
+default: &defaults
+  parallelism: 1
+  working_directory: ~/my-project
 
-# build job parameters as a template
-defaults: &defaults
-  working_directory: ~/app
-  docker:
-    # the Docker image with Cypress dependencies
-    - image: loadimpact/k6:latest
-      environment:
-        ## this enables colors in the output
-        TERM: xterm
+k6_performance_tests: &k6_performance_tests
+  run:
+    name: Running k6 tests
+    # Download the k6 docker image. Alternatively, download the k6 release binary
+    # Mount a volume to access the folder and run the test
+    # Remember to select container path for output file (since if we select host path, CI not have permission to write file from host)
+    command: |
+      docker pull loadimpact/k6:latest
+      mkdir -p /results
+      # docker run -i -v $HOME/my-project/tests:/tests \
+      #   -v $HOME/my-project/results:/results \
+      #   loadimpact/k6:latest run \
+      #   --out json=/results/full.json \
+      #   --summary-export=/results/summary.json \
+      #   /tests/local.js
+      docker run \
+      -v $(pwd)/tests/local.js:/tests/local.js \
+      -v /results:/results \
+      loadimpact/k6:latest \
+      run \
+      --out json=/results/full.json \
+      --summary-export=/results/summary.json \
+      /tests/local.js
 
+      
+version: 2
 jobs:
-  build:
+  run_performance_tests:
     <<: *defaults
-    parallelism: 1
+    # Use `machine` executor because the Docker executor cannot mount volumes
+    machine: true
     steps:
       - checkout
-      - run: pwd
-      - run: ls
-
-  k6-test:
-    <<: *defaults
-    parallelism: 1
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Running k6 Local Test
-          command: |
-            mkdir results
-            cd results
-            touch full.json summary.json
-            k6 run --out json=./results/full.json --summary-export=./results/summary.json /tests/local.js
-      - store_test_results:
+      - *k6_performance_tests
+      - store_artifacts:
           path: /results/
 
 workflows:
+  version: 2
   build-and-test:
     jobs:
-      - build:
-          filters:
-            branches:
-              only: main
-      - k6-test:
-          requires:
-            - build
-          filters:
-            branches:
-              only: main
-            
-  # scheduled-workflow:
-  #   triggers:
-  #     - schedule:
-  #         cron: "0 16 20 * *"
-  #         filters:
-  #           branches:
-  #             only: main
-  #   jobs:
-  #     - build
-  #     - testApi:
-  #         requires:
-  #           - build
-  #     - testWeb:
-  #         requires:
-  #           - build
+      - run_performance_tests

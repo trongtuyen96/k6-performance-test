@@ -6,7 +6,7 @@ export let options = {
     // Rampup for 10s from 1 to 15, stay at 15, and then down to 0
     stages: [
         { duration: "2s", target: 15 },
-        { duration: "5s", target: 15 },
+        { duration: "2s", target: 15 },
         { duration: "2s", target: 0 }
     ],
     thresholds: {
@@ -26,6 +26,6 @@ export default function () {
         });
 
         // Simulate user reading the page
-        sleep(5);
+        sleep(1);
     });
 }

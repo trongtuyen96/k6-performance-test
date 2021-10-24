@@ -1,0 +1,66 @@
+version: 2.1
+
+# build job parameters as a template
+defaults: &defaults
+  working_directory: ~/app
+  docker:
+    # the Docker image with Cypress dependencies
+    - image: loadimpact/k6:latest
+      environment:
+        ## this enables colors in the output
+        TERM: xterm
+
+jobs:
+  build:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - checkout
+      - run: pwd
+      - run: ls
+
+  k6-test:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Running k6 Local Test
+          command: |
+            mkdir results
+            cd results
+            touch full.json summary.json
+            k6 run --out json=./results/full.json --summary-export=./results/summary.json /tests/local.js
+      - store_test_results:
+          path: /results/
+
+workflows:
+  build-and-test:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: main
+      - k6-test:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
+            
+  # scheduled-workflow:
+  #   triggers:
+  #     - schedule:
+  #         cron: "0 16 20 * *"
+  #         filters:
+  #           branches:
+  #             only: main
+  #   jobs:
+  #     - build
+  #     - testApi:
+  #         requires:
+  #           - build
+  #     - testWeb:
+  #         requires:
+  #           - build
