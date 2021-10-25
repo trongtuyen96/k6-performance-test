@@ -27,4 +27,8 @@ workflows:
       - k6io/test:
           arguments: '--out json=./results/full.json --summary-export=./results/summary.json'
           script: tests/local.js
+      - store-results:
+          filters:
+            branches:
+              only: main
       
