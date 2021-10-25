@@ -2,33 +2,15 @@ version: 2.1
 orbs:
   k6io: k6io/test@1.1.0
 
-defaults: &defaults
-  working_directory: ~/app
-  docker:
-    # the Docker image with Cypress dependencies
-    - image: loadimpact/k6:latest
-      environment:
-        ## this enables colors in the output
-        TERM: xterm
-
-jobs:
-  store-results:
-    <<: *defaults
-    parallelism: 1
-    steps:
-      - store_test_results:
-          path: results
-      - store_artifacts:
-          path: results
-
 workflows:
   load_test:
     jobs:
       - k6io/test:
           arguments: '--out json=./results/full.json --summary-export=./results/summary.json'
           script: tests/local.js
-      - store-results:
-          filters:
-            branches:
-              only: main
+          post-steps:
+            - store_test_results:
+                path: ./results
+            - store_artifacts:
+                path: ./results
       
