@@ -7,5 +7,5 @@ workflows:
   load_test:
     jobs:
       - k6io/test:
-          args: '--out json=./results/full.json --summary-export=./results/summary.json'
+          arguments: '--out json=./results/full.json --summary-export=./results/summary.json'
           script: tests/local.js
