@@ -1,42 +1,14 @@
-# TO-DO: Fix the issue of permission denied when accessing results/ files
-default: &defaults
-  parallelism: 1
-  working_directory: ~/my-project
-
-k6_performance_tests: &k6_performance_tests
-  run:
-    name: Running k6 tests
-    # Download the k6 docker image. Alternatively, download the k6 release binary
-    # Mount a volume to access the folder and run the test
-    command: |
-      docker pull loadimpact/k6:latest
-      # sudo mkdir -p ci/results
-      # cd ci/results
-      # sudo touch full.json summary.json
-      # cd ..
-      # cd ..
-      docker exec -it loadimpact/k6:latest sudo chown -R 777 ci/
-      docker run -i -v $HOME/my-project/tests:/ci/tests \
-        -v $HOME/my-project/results:/ci/results \
-        loadimpact/k6:latest run \
-        --out json=/ci/results/full.json \
-        --summary-export=/ci/results/summary.json \
-        /ci/tests/local.js
-
-version: 2
-jobs:
-  run_performance_tests:
-    <<: *defaults
-    # Use `machine` executor because the Docker executor cannot mount volumes
-    machine: true
-    steps:
-      - checkout
-      - *k6_performance_tests
-      - store_test_results:
-          path: ci/results/
-
+version: 2.1
+orbs:
+  k6io: k6io/test@1.1.0
 workflows:
-  version: 2
-  build-and-test:
+  load_test:
     jobs:
-      - run_performance_tests
+      - build: 
+          steps:
+            - checkout
+            - run: pwd
+            - run: ls
+      - k6io/test:
+          args: '--out json=./results/full.json --summary-export=./results/summary.json'
+          script: tests/local.js
