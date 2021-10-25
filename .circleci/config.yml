@@ -1,14 +1,11 @@
 version: 2.1
 orbs:
   k6io: k6io/test@1.1.0
+
+
 workflows:
   load_test:
     jobs:
-      - build: 
-          steps:
-            - checkout
-            - run: pwd
-            - run: ls
       - k6io/test:
           args: '--out json=./results/full.json --summary-export=./results/summary.json'
           script: tests/local.js
