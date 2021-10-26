@@ -1,3 +1,4 @@
+# For info: https://circleci.com/developer/orbs/orb/k6io/test
 version: 2.1
 orbs:
   k6io: k6io/test@1.1.0
@@ -8,9 +9,8 @@ workflows:
       - k6io/test:
           arguments: '--out json=./results/full.json --summary-export=./results/summary.json'
           script: tests/local.js
+          # cloud: true
+          # token: K6_CLOUD_TOKEN
           post-steps:
-            - store_test_results:
-                path: ./results
             - store_artifacts:
                 path: ./results
-      
