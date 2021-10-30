@@ -3,6 +3,10 @@ import { setSleep } from '../../src/utils/sleep.utils.js';
 import * as animalActions from '../../src/actions/animal-management.actions.js';
 import { Counter } from 'k6/metrics';
 
+// This will export to HTML as filename "result.html" AND also stdout using the text summary
+import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
+
 /**
  * A soak test that runs through some common user actions 
  * for the ATWT App:
@@ -65,4 +69,11 @@ export default () => {
 
     // sleeps help keep your script realistic https://docs.k6.io/docs/sleep-t-1
     setSleep();
+}
+
+export function handleSummary(data) {
+    return {
+        "./results/result.html": htmlReport(data),
+        stdout: textSummary(data, { indent: " ", enableColors: true }),
+    };
 }
