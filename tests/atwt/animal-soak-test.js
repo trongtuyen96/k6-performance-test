@@ -5,7 +5,7 @@ import { Counter } from 'k6/metrics';
 
 // This will export to HTML as filename "result.html" AND also stdout using the text summary
 import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
-import { textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
+import { jUnit, textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
 
 /**
  * A soak test that runs through some common user actions 
@@ -73,7 +73,11 @@ export default () => {
 
 export function handleSummary(data) {
     return {
-        "./results/result.html": htmlReport(data),
+        "./results/html-result.html": htmlReport(data),
         stdout: textSummary(data, { indent: " ", enableColors: true }),
+        './results/junit-result.xml': jUnit(data), // but also transform it and save it as a JUnit XML...
+        './results/json-result.json': JSON.stringify(data), // and a JSON with all the details...
+        // And any other JS transformation of the data you can think of,
+        // you can write your own JS helpers to transform the summary data however you like!
     };
 }
