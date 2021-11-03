@@ -33,9 +33,31 @@
 
 ## Changelogs
 
+.....
+
+:star: 01/11/2021 : Add Azure Pipelines
+
+:star: 29/10/2021 : Add k6-reporter as second option for reporting
+
+:star: 28/10/2021: Add Github Actions and CỉcleCI
+
+:star: 24/10/2021 : InfluxDB with Grafana Dashboard for better report visualization
 
 ## Features
 
+:gear: Support many performance testing types (Load, Soak, Stress, Spike, ..)
+
+:gear: Cloud execution
+
+:gear: Multiple reports exported (JSON, HTML, XML)
+
+:gear: CI integrated (CircleCI, Github Actions, GitlabCI, Bitbucket Pipelines)
+
+:gear: InfluxDB + Grafana Dashboard using Docker Compose
+
+:gear: Visual regression testing supported
+
+:gear: And other functions inherited from k6
 
 ## Installation
 
