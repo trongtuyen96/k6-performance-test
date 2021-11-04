@@ -26,7 +26,7 @@ export default function () {
 
     // check() returns false if any of the specified conditions fail
     let checkRes = check(response, {
-        "http2 is used": (r) => r.proto === "HTTP/2.0",
+        // "http2 is used": (r) => r.proto === "HTTP/2.0",
         "status is 200": (r) => r.status === 200,
         "content is present": (r) => r.body.indexOf("Collection of simple web-pages suitable for load testing.") !== -1,
     });
