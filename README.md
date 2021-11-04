@@ -27,7 +27,7 @@
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Write Test](#write-test)
-- [Set Up](#set-up)
+- [InfluxDB and Grafana Dasboard](#influxdb-and-grafana-dashboard)
 - [Author](#author)
 - [License](#license)
 
@@ -66,7 +66,7 @@
 - Use npm to install the dependencies (if any)
 
 ```bash
-    npm install
+	npm install
 ```
 
 ## Basic Usage
@@ -76,7 +76,7 @@
 - To run any test file (.js), simply use:
 
 ```bash
-    k6 run <path to test file>
+	k6 run <path to test file>
 ```
 
 #### Run test on cloud
@@ -84,13 +84,13 @@
 -  To begin, you must first register a [k6 Cloud](https://k6.io/cloud/) account and then log into your account via the CLI.
 
 ```bash
-    k6 login cloud
+	k6 login cloud
 ```
 
 -  Then, you only have to pass your existing script to the k6 cloud command.
 
 ```bash
-    k6 cloud <path to test file>
+	k6 cloud <path to test file>
 ```
 
 - For more info: [Cloud test via CLI](https://k6.io/docs/cloud/creating-and-running-a-test/cloud-tests-from-the-cli/)
@@ -100,16 +100,131 @@
 - Specify VUs (virtual users) as 10, duration 30s, passed as parameters
 
 ```bash
-    k6 run --vus 10 --duration 30s script.js
+	k6 run --vus 10 --duration 30s script.js
 ```
 
 - Set up standard outpput for result 
 
 ```bash
-    k6 run --out json=./full.json --summary-export=./summary.json script.js
+	k6 run --out json=full.json --summary-export=summary.json script.js
 ```
 
 - For more info: [Running k6](https://k6.io/docs/getting-started/running-k6/)
+
+## Write Test
+
+### Four stages of test life cyle
+
+- To begin, you need to know the four distinct life cycle stages in a k6 test are "init", "setup", "VU" and "teardown"
+
+```bash
+	// 1. init code
+
+	export function setup() {
+	  // 2. setup code
+	}
+
+	export default function (data) {
+	  // 3. VU code
+	}
+
+	export function teardown(data) {
+	  // 4. teardown code
+	}
+```
+
+:one: Init code - VU level: outside of default function() and only run once per VU
+
+:two: VU code - VU level: inside of default function() and is run over and over for as long as the test is running. A VU will execute the default function from start to end in sequence, once the VU reaches the end of the default function it will loop back to the start and execute the code all over.
+
+:three: Setup code - Test-wide level: The setup is only called once for a test. Setup is called at the beginning of the test, after the init stage but before the VU stage (default function
+
+:four: Teardown code - Test-wide level: The teardown are only called once for a test. Teardown is called at the end of a test, after the VU stage (default function).
+
+- For more info: [k6 Test Life Cycle](https://k6.io/docs/using-k6/test-life-cycle/)
+
+### Example test
+
+#### The example with making HTTP request and using stages in k6 (ram-up and ramp-down)
+
+<p align="center">
+    <img src="https://github.com/trongtuyen96/k6-performance-test/blob/04b0463571cf336369ea9f0927fa918570daeda2/covers/test-1.png" width="650px">
+</p>
+
+- The configuration of stages would be set inside options, and there are 3 stages described in example
+- default function is where we write code for VU. In this example, we amke HHTP request get to http://test.loadimpact.com
+- check is built-in method of k6 to validate result. We checked status was 200 and transaction time < 200
+- sleep() to stimulate break time between each iteration of VU
+
+#### The example with cloud execution (custom load zones) and thresholds
+
+<p align="center">
+    <img src="https://github.com/trongtuyen96/k6-performance-test/blob/04b0463571cf336369ea9f0927fa918570daeda2/covers/test-2.png" width="650px">
+</p>
+
+- In line 5, we used Rate, one of four custom metrics provided by k6. Rate is an object for representing a custom metric keeping track of the percentage of added values that are non-zero. We put this Rate ("failed requests") into threshold to check fail rate had to be < 10%
+- Threshold are a pass/fail criteria used to specify the performance expectations. In this example, we defined http_req_duration with p(95) < 250, this means 95% of request durations must be less than 250ms.
+- From line 20 onwards, that's where we set up load zones for cloud test, 60% traffic distributed on AWS Ashburn, 40% on AWS Dublin.
+- Line 22, we can set up projectID, which is linked to created project on k6 cloud for reporting
+- Line 37 and 39, value of true (1) and false (0) were put into Rate "failed requests"
+
+### Using k6-reporter for better HTML reports
+
+- Add below lines of code in init section to import 
+
+```bash
+	import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+```
+
+- Then add this function to the test file, which is implicitly called by k6 at the end of every test.
+
+```bash
+	export function handleSummary(data) {
+  	  return {
+            "summary.html": htmlReport(data),
+  	  };
+	}
+```
+### Using multiple reporters
+
+- Import jUnit and textSummary for k6 lib
+
+```bash
+	import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
+	import { jUnit, textSummary } from "https://jslib.k6.io/k6-summary/0.0.1/index.js";
+```
+
+- Add more options for reports
+
+```bash
+	export function handleSummary(data) {
+    	  return {
+	    "./results/html-result.html": htmlReport(data),
+	    stdout: textSummary(data, { indent: " ", enableColors: true }),
+	    './results/junit-result.xml': jUnit(data), // but also transform it and save it as a JUnit XML...
+	    './results/json-result.json': JSON.stringify(data), // and a JSON with all the details...
+    	  };
+	}
+```
+### More testing type examples
+
+- [Smoke testing](https://github.com/trongtuyen96/k6-performance-test/blob/main/examples/smoke-test.js)
+- [Load testing](https://github.com/trongtuyen96/k6-performance-test/blob/main/examples/load-test.js)
+- [Stress testing](https://github.com/trongtuyen96/k6-performance-test/blob/main/examples/stress-test.js)
+- [Soak testing](https://github.com/trongtuyen96/k6-performance-test/blob/main/examples/soak-test.js)
+
+### More information
+- [HTTP Requests](https://k6.io/docs/using-k6/http-requests/)
+- [Custom Metrics](https://k6.io/docs/using-k6/metrics/)
+- [Check](https://k6.io/docs/using-k6/checks/)
+- [Thresholds](https://k6.io/docs/using-k6/thresholds/)
+- [Tags and Groups](https://k6.io/docs/using-k6/tags-and-groups/)
+- [Options](https://k6.io/docs/using-k6/options/)
+- [Result Ouput](https://k6.io/docs/getting-started/results-output/)
+
+## InfluxDB and Grafana Dashboard
+
+
 
 ## Author
 	
