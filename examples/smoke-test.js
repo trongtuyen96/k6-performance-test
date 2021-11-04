@@ -1,38 +1,37 @@
-import { check } from "k6";
 import http from 'k6/http';
+import { check, group, sleep, fail } from 'k6';
 
-export let options = { 
-  maxRedirects: 1, 
-  duration: "1m", 
-  vus: 1,
+export const options = {
+  vus: 1, // 1 user looping for 1 minute
+  duration: '1m',
+
   thresholds: {
-    'http_req_duration': ['p(99)<1500'], // 99% of requests must complete below 1.5s
-  }
+    http_req_duration: ['p(99)<1500'], // 99% of requests must complete below 1.5s
+  },
 };
 
-export default function() {
-  var url = 'http://test.loadimpact.com/login.php';
-  var formdata = {
-    login: 'admin',
-    password: '123',
-  };
+const BASE_URL = 'https://test-api.k6.io';
+const USERNAME = 'TestUser';
+const PASSWORD = 'SuperCroc2020';
 
-  var params = {
+export default () => {
+  const loginRes = http.post(`${BASE_URL}/auth/token/login/`, {
+    username: USERNAME,
+    password: PASSWORD,
+  });
+
+  check(loginRes, {
+    'logged in successfully': (resp) => resp.json('access') !== '',
+  });
+
+  const authHeaders = {
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'    
+      Authorization: `Bearer ${loginRes.json('access')}`,
     },
   };
 
-  let res = http.post(url, formdata, params);
-  let jar = http.cookieJar();
-  let cookies = jar.cookiesForURL(url);
+  const myObjects = http.get(`${BASE_URL}/my/crocodiles/`, authHeaders).json();
+  check(myObjects, { 'retrieved crocodiles': (obj) => obj.length > 0 });
 
-  check(res, {
-    "is status 200": r => r.status === 200,
-    "has cookie 'sid'": (r) => cookies.sid.length > 0,
-    "has cookie 'uid'": (r) => cookies.uid.length > 0,
-    "cookie 'sid' has correct value": (r) => cookies.sid == "39b77ac6-39c4-4c43-98b3-6b2816682036",
-    "cookie 'uid' has correct value": (r) => cookies.uid == "3221"
- });
-  
-}
+  sleep(1);
+};

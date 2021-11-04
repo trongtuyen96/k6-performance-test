@@ -1,28 +1,23 @@
-import { check } from 'k6';
 import http from 'k6/http';
+import { sleep } from 'k6';
 
-export let options = {
+export const options = {
   stages: [
-    { duration: '2m', target: 100 }, // ramping up to 300 users, look like peak test
-    { duration: '3h30m', target: 100 }, // endurance test
-    { duration: '2m', target: 0 }, // ramping down
+    { duration: '2m', target: 400 }, // ramp up to 400 users
+    { duration: '3h56m', target: 400 }, // stay at 400 for ~4 hours
+    { duration: '2m', target: 0 }, // scale down. (optional)
   ],
 };
 
-export default function() {
+const API_BASE_URL = 'https://test-api.k6.io';
 
-  var params = {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36'
-    }
-  };
+export default function () {
+  http.batch([
+    ['GET', `${API_BASE_URL}/public/crocodiles/1/`],
+    ['GET', `${API_BASE_URL}/public/crocodiles/2/`],
+    ['GET', `${API_BASE_URL}/public/crocodiles/3/`],
+    ['GET', `${API_BASE_URL}/public/crocodiles/4/`],
+  ]);
 
-  var url = "http://test.k6.io";
-
-  let res = http.get(url, params);
-
-  check(res, {
-    "is status 200": r => r.status === 200,
- });
-
+  sleep(1);
 }

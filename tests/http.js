@@ -1,7 +1,7 @@
 import http from "k6/http";
 import { check, sleep } from "k6";
 
-// `options.stages to configure ramp up/down VU level
+// options.stages to configure ramp up/down VU level
 export let options = {
     stages: [
         // Ramp-up from 1 to 20 VUs in 20s
