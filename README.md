@@ -47,7 +47,7 @@
 
 :gear: Support many performance testing types (Load, Soak, Stress, Spike, ..)
 
-:gear: Cloud execution
+:gear: Cloud execution with different load zones (Asia, EU, US, Canada, ...)
 
 :gear: Multiple reports exported (JSON, HTML, XML)
 
@@ -61,7 +61,55 @@
 
 ## Installation
 
+- Head to [k6 Installation](https://k6.io/docs/getting-started/installation/) for your k6 installation
+
+- Use npm to install the dependencies (if any)
+
+```bash
+    npm install
+```
+
 ## Basic Usage
+
+#### Run test locally
+
+- To run any test file (.js), simply use:
+
+```bash
+    k6 run <path to test file>
+```
+
+#### Run test on cloud
+
+-  To begin, you must first register a [k6 Cloud](https://k6.io/cloud/) account and then log into your account via the CLI.
+
+```bash
+    k6 login cloud
+```
+
+-  Then, you only have to pass your existing script to the k6 cloud command.
+
+```bash
+    k6 cloud <path to test file>
+```
+
+- For more info: [Cloud test via CLI](https://k6.io/docs/cloud/creating-and-running-a-test/cloud-tests-from-the-cli/)
+
+#### Run test with options
+
+- Specify VUs (virtual users) as 10, duration 30s, passed as parameters
+
+```bash
+    k6 run --vus 10 --duration 30s script.js
+```
+
+- Set up standard outpput for result 
+
+```bash
+    k6 run --out json=./full.json --summary-export=./summary.json script.js
+```
+
+- For more info: [Running k6](https://k6.io/docs/getting-started/running-k6/)
 
 ## Author
 	
