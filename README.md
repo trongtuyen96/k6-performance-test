@@ -36,6 +36,8 @@
 
 .....
 
+:star: 06/11/2021 : Update README and k6-html-reporter
+
 :star: 01/11/2021 : Add Azure Pipelines
 
 :star: 29/10/2021 : Add k6-reporter as second option for reporting
@@ -169,7 +171,7 @@
 - Line 22, we can set up projectID, which is linked to created project on k6 cloud for reporting
 - Line 37 and 39, value of true (1) and false (0) were put into Rate "failed requests"
 
-### Using k6-reporter for better HTML reports
+### Using k6-reporter by benc-uk
 
 - Add below lines of code in init section to import 
 
@@ -177,7 +179,7 @@
 	import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 ```
 
-- Then add this function to the test file, which is implicitly called by k6 at the end of every test.
+- Then add this function to the test file, which is implicitly called by k6 at the end of every test
 
 ```bash
 	export function handleSummary(data) {
@@ -207,6 +209,37 @@
     	  };
 	}
 ```
+
+### Using k6-html-reporter
+
+- Specify the path to json report and path to output directory in [html-report.js](https://github.com/trongtuyen96/k6-performance-test/blob/main/src/utils/html-reporter.js)
+
+```bash
+	const reporter = require('k6-html-reporter');
+
+	const options = {
+		jsonFile: <path-to-json-report>,
+		output: <path-to-output-directory>,
+	    };
+
+	reporter.generateSummaryReport(options);
+```
+
+- Run the test which already has handleSummary function specified, take a look at [animal-soak-test.js](https://github.com/trongtuyen96/k6-performance-test/blob/main/tests/atwt/animal-soak-test.js)
+
+```bash
+	k6 run ./tests/atwt/animal-soak-test.js
+```
+
+- Run js file html-report.js to generate html report from json report
+
+```bash
+	node ./src/utils/html-reporter.js
+```
+
+- The exported report "report.html" will be located at "path-to-output-directory"
+- For more info: [k6-html-reporter](https://www.npmjs.com/package/k6-html-reporter)
+
 ### More testing type examples
 
 - [Smoke testing](https://github.com/trongtuyen96/k6-performance-test/blob/main/examples/smoke-test.js)
