@@ -5,7 +5,7 @@
   <a><img src="https://github.com/trongtuyen96/k6-performance-test/blob/0691f9dad7cfe6819652fc525da5ca82b16b2f92/covers/dash.png" alt="dash" ></a>
 </h1>
 
-<h3 align="center" style="bold">An automation testing framework for performance test based on k6. With InfluxDB, Grafana Dashboard for better visualizations and CI process intergrated by CircleCI, Azure Pipelines, Github Actions.</h3>
+<h3 align="center" style="bold">An automation testing framework for performance test based on <a href="https://k6.io/">k6</a>. With <a href="https://www.influxdata.com/">InfluxDB</a>, <a href="https://grafana.com/">Grafana Dashboard</a> for better visualizations and CI process intergrated by <a href="https://circleci.com/">CircleCI</a>, <a href="https://azure.microsoft.com/en-us/services/devops/pipelines/">Azure Pipelines</a>, <a href="https://github.com/features/actions">Github Actions</a>.</h3>
 
 <p align="center">
   <a alt="CircleCI" href="https://circleci.com/gh/trongtuyen96/k6-performance-test/tree/main">
