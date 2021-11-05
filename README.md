@@ -28,6 +28,7 @@
 - [Basic Usage](#basic-usage)
 - [Write Test](#write-test)
 - [InfluxDB and Grafana Dasboard](#influxdb-and-grafana-dashboard)
+- [CI Builds](#ci-builds)
 - [Author](#author)
 - [License](#license)
 
@@ -148,7 +149,7 @@
 #### The example with making HTTP request and using stages in k6 (ram-up and ramp-down)
 
 <p align="center">
-    <img src="https://github.com/trongtuyen96/k6-performance-test/blob/04b0463571cf336369ea9f0927fa918570daeda2/covers/test-1.png" width="650px">
+    <img src="https://github.com/trongtuyen96/k6-performance-test/blob/04b0463571cf336369ea9f0927fa918570daeda2/covers/test-1.png" width="580px">
 </p>
 
 - The configuration of stages would be set inside options, and there are 3 stages described in example
@@ -224,7 +225,82 @@
 
 ## InfluxDB and Grafana Dashboard
 
+### Definition
 
+- Adding InfluxDB and Grafana, K6 gives a very powerful visualisation of the load test as it runs
+- [InfluxDB](https://github.com/influxdata/influxdb): is a fast time-series database, which is supported by K6 as an output target for realtime monitoring of a test. Whilst K6 is running, it will stream run statistics to InfluxDB
+- [Grafana](https://github.com/grafana/grafana): is a beautiful browser UI for data visualisation, which supports InfluxDB as a data source
+- [Docker](https://www.docker.com/): is a platform for containers. Docker Compose adds the ability to bundle multiple containers together into complex integrated applications.
+
+<p align="center">
+    <img src="https://github.com/trongtuyen96/k6-performance-test/blob/cf8f5b62b362bdb4f14e240095b15c882901d2be/covers/influxdb-grafana.png" width="800px">
+</p>
+
+### Set up to run
+
+#### docker-compose.yml
+
+<p align="center">
+    <img src="https://github.com/trongtuyen96/k6-performance-test/blob/cf8f5b62b362bdb4f14e240095b15c882901d2be/covers/docker-compose.png" width="780px">
+</p>
+
+- There are 3 servers and two networks where
+	- Runs Grafana web server for visualisation in the background on port 3000
+	- Runs InfluxDB database in the background on port 8086
+	- Runs K6 on an ad-hoc basis to execute a load test script
+
+### External files
+
+- grafana-datasource.yaml: configures Grafana to use InfluxDB as a data source, connect to the database over the local docker network on port 8086
+
+<p align="center">
+    <img src="https://github.com/trongtuyen96/k6-performance-test/blob/cf8f5b62b362bdb4f14e240095b15c882901d2be/covers/grafana-datasource.png" width="280px">
+</p>
+
+- grafana-dashboard.yaml: configures Grafana to load a K6 dashboard from the /var/lib/grafana/dashboards directory
+
+<p align="center">
+    <img src="https://github.com/trongtuyen96/k6-performance-test/blob/cf8f5b62b362bdb4f14e240095b15c882901d2be/covers/grafana-dashboard.png" width="350px">
+</p>
+
+- dashboard/k6-load-testing-results_rev3.json: a JSON configuration of a K6/InfluxDB dashboard with few modifications
+	
+### How to run
+
+- Running a load test requires that the InfluxDB and Grafana services are already running in the background:
+
+```bash
+	docker-compose up -d influxdb grafana
+```
+
+- Run docker-compose to perform a K6 run on a test script:
+
+```bash
+	docker-compose run k6 run /tests/threshold.js
+```
+
+- And result will be displayed at: http://localhost:3000/d/k6/k6-load-testing-results
+
+I also write shell script for faster usage:
+- [run-threshold-test.sh](https://github.com/trongtuyen96/k6-performance-test/blob/main/run-threshold-test.sh): To execute on Linux machines
+- [run-threshold-test-wins.sh](https://github.com/trongtuyen96/k6-performance-test/blob/main/run-threshold-test-wins.sh): To run on Windows machines
+
+## CI Builds
+
+CI | Build status | Config File | Description
+:--- | :--- | :--- | :---
+CircleCI | [![CircleCI](https://circleci.com/gh/trongtuyen96/k6-performance-test/tree/main.svg?style=svg)](https://circleci.com/gh/trongtuyen96/k6-performance-test/tree/main) | [config.yml](.circleci/config.yml) | Test local.js with standard output files stored in CircleCI (using Orbs)
+CircleCI - AWS set up | Not activated | [config-aws-firewall.yml](.circleci/config-aws-firewall.yml) | [Load Test Behind the Firewall](https://k6.io/blog/integrating-load-testing-with-circleci/)
+CircleCI - Basic | Not activated | [config-basic.yml](.circleci/config-basic.yml) | Basic run 
+CircleCI - Cloud | Not activated | [config-cloud.yml](.circleci/config-cloud.yml) | Cloud execution
+CircleCI - Docker with result output | Not activated | [config-result-docker.yml](.circleci/config-result-docker.yml) | Cloud execution
+Azure Pipelines | [![Azure Pipelines](https://trongtuyen131296.visualstudio.com/k6-performance-test/_apis/build/status/trongtuyen96.k6-performance-test?branchName=main)](https://trongtuyen131296.visualstudio.com/k6-performance-test/_build/latest?definitionId=2&branchName=main) | [azure-pipelines.yaml](azure-pipelines.yaml) | Branch sunced and pipelines built automatically on Azure Pipelines
+Azure Pipelines - Docker | Not activated | [azure-pipelines.docker.yaml](./azure/azure-pipelines.docker.yaml) | Azure Pipelines with Docker images
+Azure Pipelines - Manual Installation | Not activated | [azure-pipelines.manual.yaml](./azure/azure-pipelines.manual.yaml) | Azure Pipelines with manual installation of k6
+Github Actions - k6 | [![Github - k6](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6.yaml/badge.svg)](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6.yaml) | [k6.yml](.github/workflows/k6.yml) | Github Actions with local test run
+Github Actions - Docker | [![Github - Docker](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-docker.yaml/badge.svg)](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-docker.yaml) | [k6-docker.yaml](.github/workflows/k6-docker.yaml) | Github Actions with docker
+Github Actions - Windows | [![Github - Windows](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-wins.yaml/badge.svg)](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-wins.yaml) | [k6-wins.yaml](.github/workflows/k6-wins.yaml) | Github Actions with manual installation on Windows
+Github Actions - Mac | [![Github - Mac](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-mac.yaml/badge.svg)](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-mac.yaml) | [k6-mac.yaml](.github/workflows/k6-mac.yaml) | Github Actions with manual installation on Mac
 
 ## Author
 	
