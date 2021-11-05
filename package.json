@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-atwt-animal": "k6 run ./tests/atwt/animal-soak-test.js",
+    "test-atwt-animal-html-report": "node ./src/utils/html-reporter.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/trongtuyen96/k6-performance-test/issues"
   },
-  "homepage": "https://github.com/trongtuyen96/k6-performance-test#readme"
+  "homepage": "https://github.com/trongtuyen96/k6-performance-test#readme",
+  "devDependencies": {
+    "k6-html-reporter": "^1.0.5"
+  }
 }

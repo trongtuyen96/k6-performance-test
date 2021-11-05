@@ -19,12 +19,11 @@ export let options = {
     ext: {
         loadimpact: {
             name: "test.loadimpact.com",
+            // projectID: 123456,
+            // staticIPs: true,
             distribution: {
                 loadZoneLabel1: { loadZone: "amazon:us:ashburn", percent: 60 },
-                loadZoneLabel2: { loadZone: "amazon:ie:dublin", percent: 40 }
-            }
-        }
-    }
+                loadZoneLabel2: { loadZone: "amazon:ie:dublin", percent: 40 }}}}
 };
 
 // User scenario
@@ -37,8 +36,7 @@ export default function () {
         if (check(res, { "is status 200": (r) => r.status === 200 })) {
             failRate.add(false);
         } else {
-            failRate.add(true);
-        }
+            failRate.add(true);}
 
         // Simulate user reading the page
         sleep(5);
