@@ -28,6 +28,7 @@
 - [Basic Usage](#basic-usage)
 - [Write Test](#write-test)
 - [InfluxDB and Grafana Dasboard](#influxdb-and-grafana-dashboard)
+- [CI Builds](#ci-builds)
 - [Author](#author)
 - [License](#license)
 
@@ -283,6 +284,23 @@
 I also write shell script for faster usage:
 - [run-threshold-test.sh](https://github.com/trongtuyen96/k6-performance-test/blob/main/run-threshold-test.sh): To execute on Linux machines
 - [run-threshold-test-wins.sh](https://github.com/trongtuyen96/k6-performance-test/blob/main/run-threshold-test-wins.sh): To run on Windows machines
+
+## CI Builds
+
+CI | Build status | Config File | Description
+:--- | :--- | :--- | :---
+CircleCI | [![CircleCI](https://circleci.com/gh/trongtuyen96/k6-performance-test/tree/main.svg?style=svg)](https://circleci.com/gh/trongtuyen96/k6-performance-test/tree/main) | [config.yml](.circleci/config.yml) | Test local.js with standard output files stored in CircleCI (using Orbs)
+CircleCI - AWS set up | Not activated | [config-aws-firewall.yml](.circleci/config-aws-firewall.yml) | [Load Test Behind the Firewall](https://k6.io/blog/integrating-load-testing-with-circleci/)
+CircleCI - Basic | Not activated | [config-basic.yml](.circleci/config-basic.yml) | Basic run 
+CircleCI - Cloud | Not activated | [config-cloud.yml](.circleci/config-cloud.yml) | Cloud execution
+CircleCI - Docker with result output | Not activated | [config-result-docker.yml](.circleci/config-result-docker.yml) | Cloud execution
+Azure Pipelines | [![Azure Pipelines](https://trongtuyen131296.visualstudio.com/k6-performance-test/_apis/build/status/trongtuyen96.k6-performance-test?branchName=main)](https://trongtuyen131296.visualstudio.com/k6-performance-test/_build/latest?definitionId=2&branchName=main) | [azure-pipelines.yaml](azure-pipelines.yaml) | Branch sunced and pipelines built automatically on Azure Pipelines
+Azure Pipelines - Docker | Not activated | [azure-pipelines.docker.yaml](./azure/azure-pipelines.docker.yaml) | Azure Pipelines with Docker images
+Azure Pipelines - Manual Installation | Not activated | [azure-pipelines.manual.yaml](./azure/azure-pipelines.manual.yaml) | Azure Pipelines with manual installation of k6
+Github Actions - k6 | [![Github - k6](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6.yaml/badge.svg)](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6.yaml) | [k6.yml](.github/workflows/k6.yml) | Github Actions with local test run
+Github Actions - Docker | [![Github - Docker](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-docker.yaml/badge.svg)](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-docker.yaml) | [k6-docker.yaml](.github/workflows/k6-docker.yaml) | Github Actions with docker
+Github Actions - Windows | [![Github - Windows](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-wins.yaml/badge.svg)](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-wins.yaml) | [k6-wins.yaml](.github/workflows/k6-wins.yaml) | Github Actions with manual installation on Windows
+Github Actions - Mac | [![Github - Mac](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-mac.yaml/badge.svg)](https://github.com/trongtuyen96/k6-performance-test/actions/workflows/k6-mac.yaml) | [k6-mac.yaml](.github/workflows/k6-mac.yaml) | Github Actions with manual installation on Mac
 
 ## Author
 	
