@@ -37,6 +37,8 @@
 
 .....
 
+:star: 07/11/2021 : Add Postman and JMeter converters
+
 :star: 06/11/2021 : Update README and k6-html-reporter
 
 :star: 01/11/2021 : Add Azure Pipelines
