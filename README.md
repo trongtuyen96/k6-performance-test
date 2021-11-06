@@ -240,6 +240,21 @@
 - The exported report "report.html" will be located at "path-to-output-directory"
 - For more info: [k6-html-reporter](https://www.npmjs.com/package/k6-html-reporter)
 
+### Calculating RPS with k6
+
+```bash
+	Request Rate = (VU * R) / T
+
+	T = (R * http_req_duration) + 1s
+```
+
+- Request Rate: measured by the number of requests per second (RPS)
+- VU: the number of virtual users
+- R: the number of requests per VU iteration
+- T: a value larger than the time needed to complete a VU iteration
+
+For more info: [Generate constant request rate in k6](https://k6.io/blog/ref-how-to-generate-a-constant-request-rate-in-k6/)
+
 ### More testing type examples
 
 - [Smoke testing](https://github.com/trongtuyen96/k6-performance-test/blob/main/examples/smoke-test.js)
@@ -255,6 +270,7 @@
 - [Tags and Groups](https://k6.io/docs/using-k6/tags-and-groups/)
 - [Options](https://k6.io/docs/using-k6/options/)
 - [Result Ouput](https://k6.io/docs/getting-started/results-output/)
+- [Running large tests](https://k6.io/docs/testing-guides/running-large-tests/)
 
 ## InfluxDB and Grafana Dashboard
 
