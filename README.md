@@ -27,7 +27,8 @@
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Write Test](#write-test)
-- [InfluxDB and Grafana Dasboard](#influxdb-and-grafana-dashboard)
+- [InfluxDB And Grafana Dasboard](#influxdb-and-grafana-dashboard)
+- [Convert Other Tests To k6](#convert-other-tests-to-k6)
 - [CI Builds](#ci-builds)
 - [Author](#author)
 - [License](#license)
@@ -35,6 +36,8 @@
 ## Changelogs
 
 .....
+
+:star: 07/11/2021 : Add Postman and JMeter converters
 
 :star: 06/11/2021 : Update README and k6-html-reporter
 
@@ -272,7 +275,7 @@ For more info: [Generate constant request rate in k6](https://k6.io/blog/ref-how
 - [Result Ouput](https://k6.io/docs/getting-started/results-output/)
 - [Running large tests](https://k6.io/docs/testing-guides/running-large-tests/)
 
-## InfluxDB and Grafana Dashboard
+## InfluxDB And Grafana Dashboard
 
 ### Definition
 
@@ -333,6 +336,43 @@ For more info: [Generate constant request rate in k6](https://k6.io/blog/ref-how
 I also write shell script for faster usage:
 - [run-threshold-test.sh](https://github.com/trongtuyen96/k6-performance-test/blob/main/run-threshold-test.sh): To execute on Linux machines
 - [run-threshold-test-wins.sh](https://github.com/trongtuyen96/k6-performance-test/blob/main/run-threshold-test-wins.sh): To run on Windows machines
+
+## Convert Other Tests To k6
+
+### Postman collection to k6 test
+
+- Install via npm, preferably use -g for globally:
+
+```bash
+	npm install --save-dev postman-to-k6
+```
+
+- To convert an exported collection to k6 script:
+
+```bash
+	postman-to-k6 <path to collection json> -o <path to output k6 test js>
+```
+
+- Then we can run that converted k6 test file as usual
+- For more info: https://github.com/grafana/postman-to-k6
+
+### JMeter file to k6 test
+
+- Install via npm, preferably use -g for globally:
+
+```bash
+	npm install --save-dev jmeter-to-k6
+```
+
+- To convert an exported jmx file to k6 script:
+
+```bash
+	jmeter-to-k6 <path to jmx> -o <output directory>
+```
+
+- This will create a directory ./directory/ with a file called test.js and a sub-directory called libs
+- Then we can run that converted k6 test file as usual
+- For more info: https://github.com/grafana/jmeter-to-k6
 
 ## CI Builds
 
