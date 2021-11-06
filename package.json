@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "test-atwt-animal": "k6 run ./tests/atwt/animal-soak-test.js",
-    "test-atwt-animal-html-report": "node ./src/utils/html-reporter.js"
+    "test-atwt-animal-html-report": "node ./src/utils/html-reporter.js",
+    "convert-postman-to-k6": "postman-to-k6 ./src/data/Postman_Echo.postman_collection.json -o ./tests/postman-to-k6/postman-to-k6.js",
+    "convert-jmeter-to-k6": "jmeter-to-k6 ./src/data/jmeter-example.jmx -o ./tests/jmeter-to-k6"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,9 @@
   },
   "homepage": "https://github.com/trongtuyen96/k6-performance-test#readme",
   "devDependencies": {
-    "k6-html-reporter": "^1.0.5"
-  }
+    "jmeter-to-k6": "^1.0.0",
+    "k6-html-reporter": "^1.0.5",
+    "postman-to-k6": "^1.5.0"
+  },
+  "dependencies": {}
 }
