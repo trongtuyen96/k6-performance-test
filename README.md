@@ -5,7 +5,7 @@
   <a><img src="https://github.com/trongtuyen96/k6-performance-test/blob/0691f9dad7cfe6819652fc525da5ca82b16b2f92/covers/dash.png" alt="dash" ></a>
 </h1>
 
-<h3 align="center" style="bold">An automation testing framework for performance test based on k6. With InfluxDB, Grafana Dashboard for better visualizations and CI process intergrated by CircleCI, Azure Pipelines, Github Actions.</h3>
+<h3 align="center" style="bold">An automation testing framework for performance test based on <a href="https://k6.io/">k6</a>. With <a href="https://www.influxdata.com/">InfluxDB</a>, <a href="https://grafana.com/">Grafana Dashboard</a> for better visualizations and CI process intergrated by <a href="https://circleci.com/">CircleCI</a>, <a href="https://azure.microsoft.com/en-us/services/devops/pipelines/">Azure Pipelines</a>, <a href="https://github.com/features/actions">Github Actions</a>.</h3>
 
 <p align="center">
   <a alt="CircleCI" href="https://circleci.com/gh/trongtuyen96/k6-performance-test/tree/main">
@@ -35,6 +35,8 @@
 ## Changelogs
 
 .....
+
+:star: 06/11/2021 : Update README and k6-html-reporter
 
 :star: 01/11/2021 : Add Azure Pipelines
 
@@ -169,7 +171,7 @@
 - Line 22, we can set up projectID, which is linked to created project on k6 cloud for reporting
 - Line 37 and 39, value of true (1) and false (0) were put into Rate "failed requests"
 
-### Using k6-reporter for better HTML reports
+### Using k6-reporter by benc-uk
 
 - Add below lines of code in init section to import 
 
@@ -177,7 +179,7 @@
 	import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 ```
 
-- Then add this function to the test file, which is implicitly called by k6 at the end of every test.
+- Then add this function to the test file, which is implicitly called by k6 at the end of every test
 
 ```bash
 	export function handleSummary(data) {
@@ -207,6 +209,52 @@
     	  };
 	}
 ```
+
+### Using k6-html-reporter
+
+- Specify the path to json report and path to output directory in [html-report.js](https://github.com/trongtuyen96/k6-performance-test/blob/main/src/utils/html-reporter.js)
+
+```bash
+	const reporter = require('k6-html-reporter');
+
+	const options = {
+		jsonFile: <path-to-json-report>,
+		output: <path-to-output-directory>,
+	    };
+
+	reporter.generateSummaryReport(options);
+```
+
+- Run the test which already has handleSummary function specified, take a look at [animal-soak-test.js](https://github.com/trongtuyen96/k6-performance-test/blob/main/tests/atwt/animal-soak-test.js)
+
+```bash
+	k6 run ./tests/atwt/animal-soak-test.js
+```
+
+- Run js file html-report.js to generate html report from json report
+
+```bash
+	node ./src/utils/html-reporter.js
+```
+
+- The exported report "report.html" will be located at "path-to-output-directory"
+- For more info: [k6-html-reporter](https://www.npmjs.com/package/k6-html-reporter)
+
+### Calculating RPS with k6
+
+```bash
+	Request Rate = (VU * R) / T
+
+	T = (R * http_req_duration) + 1s
+```
+
+- Request Rate: measured by the number of requests per second (RPS)
+- VU: the number of virtual users
+- R: the number of requests per VU iteration
+- T: a value larger than the time needed to complete a VU iteration
+
+For more info: [Generate constant request rate in k6](https://k6.io/blog/ref-how-to-generate-a-constant-request-rate-in-k6/)
+
 ### More testing type examples
 
 - [Smoke testing](https://github.com/trongtuyen96/k6-performance-test/blob/main/examples/smoke-test.js)
@@ -222,6 +270,7 @@
 - [Tags and Groups](https://k6.io/docs/using-k6/tags-and-groups/)
 - [Options](https://k6.io/docs/using-k6/options/)
 - [Result Ouput](https://k6.io/docs/getting-started/results-output/)
+- [Running large tests](https://k6.io/docs/testing-guides/running-large-tests/)
 
 ## InfluxDB and Grafana Dashboard
 
