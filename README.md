@@ -45,7 +45,7 @@
 
 :star: 29/10/2021 : Add k6-reporter as second option for reporting
 
-:star: 28/10/2021: Add Github Actions and CỉcleCI
+:star: 28/10/2021: Add Github Actions and CircleCI
 
 :star: 24/10/2021 : InfluxDB with Grafana Dashboard for better report visualization
 
