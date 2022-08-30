@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <testsuites tests="6" failures="0">
-<testsuite name="k6 thresholds" tests="6" failures="0"><testcase name="http_req_duration{my_tag:Create} - p(90)&lt;700" />
-<testcase name="http_req_duration{my_tag:Create} - avg&lt;600" />
-<testcase name="http_req_duration{my_tag:Get} - avg&lt;600" />
-<testcase name="http_req_duration{my_tag:Get} - p(90)&lt;700" />
+<testsuite name="k6 thresholds" tests="6" failures="0"><testcase name="http_req_duration{my_tag:Create} - avg&lt;600" />
+<testcase name="http_req_duration{my_tag:Create} - p(90)&lt;700" />
 <testcase name="http_req_duration - avg&lt;500" />
 <testcase name="http_req_duration - p(95)&lt;1500" />
+<testcase name="http_req_duration{my_tag:Get} - avg&lt;600" />
+<testcase name="http_req_duration{my_tag:Get} - p(90)&lt;700" />
 </testsuite >
 </testsuites >
