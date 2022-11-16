@@ -59,7 +59,7 @@
 
 :gear: CI integrated (CircleCI, Github Actions, GitlabCI, Bitbucket Pipelines)
 
-:gear: InfluxDB + Grafana Dashboard using Docker Compose
+:gear: InfluxDB + Grafana Dashboard using docker Compose
 
 :gear: Visual regression testing supported
 
