@@ -406,7 +406,7 @@ Github Actions - Mac | [![Github - Mac](https://github.com/trongtuyen96/k6-perfo
 		 <a alt="LinkedIn" href="https://www.linkedin.com/in/tuyennguyen96/">
     <img src="https://user-images.githubusercontent.com/25218255/47360366-8583ac80-d6f9-11e8-8871-219802a9a162.png" width="50">
   </a>
-		 <a alt="Facebook" href="https://www.facebook.com/tuyen.trong.3">
+		 <a alt="Facebook" href="https://www.facebook.com/ntrongtuyen96">
     <img src="https://user-images.githubusercontent.com/25218255/47360363-84eb1600-d6f9-11e8-8029-818481536200.png" width="50">
   </a>
 </p>
